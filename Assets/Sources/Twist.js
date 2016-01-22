@@ -11,7 +11,7 @@ private var baseNormals : Vector3[];
 function Update ()
 {
 var mesh : Mesh = GetComponent(MeshFilter).mesh;
-twist = 0.1;
+twist += 0.1;
 	if (baseVertices == null)
 		baseVertices = mesh.vertices;
 	if (baseNormals == null)
@@ -20,14 +20,16 @@ twist = 0.1;
 	var normals = new Vector3[baseVertices.Length];
 for (var i=0;i<vertices.Length;i++)
 	{
-		vertices[i].x = twist;
-		normals[i].x = twist;
+	var r = twist;
+	if(i>1) r = 0;
+		vertices[i] = DoMove(baseVertices[i], r);
+		//normals[i] = DoMove(baseNormals[i], r);
 	}
 Debug.Log(vertices[5]);
 	mesh.vertices = vertices;
-	mesh.normals = vertices;
-	mesh.RecalculateNormals();
-	mesh.RecalculateBounds();
+	//mesh.normals = vertices;
+	//mesh.RecalculateNormals();
+	//mesh.RecalculateBounds();
 //	twist += Input.GetAxis("Horizontal") * inputSensitivity * Time.deltaTime;
 //	
 //	var mesh : Mesh = GetComponent(MeshFilter).mesh;
@@ -54,7 +56,16 @@ Debug.Log(vertices[5]);
 //	mesh.RecalculateNormals();
 //	mesh.RecalculateBounds();
 }
+function DoMove( pos : Vector3, t : float )
+{
+	new_pos = Vector3.zero;
+	
+	new_pos.x = pos.x;
+	new_pos.z = pos.z+t;
+	new_pos.y = pos.y;
 
+	return new_pos;
+}
 function DoTwist( pos : Vector3, t : float )
 {
 	var st = Mathf.Sin(t);
